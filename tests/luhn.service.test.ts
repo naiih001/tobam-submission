@@ -1,19 +1,17 @@
-import { expect, test, describe } from "bun:test";
+import { expect, test, describe } from "vitest";
 import { LuhnService } from "../src/services/luhn.service";
 
 describe("LuhnService", () => {
   const luhnService = new LuhnService();
 
   test("should validate correct card numbers", () => {
-    // Standard test case (Visa)
     expect(luhnService.validate("49927398716")).toBe(true);
-    // Another valid number
     expect(luhnService.validate("79927398713")).toBe(true);
   });
 
   test("should reject invalid card numbers", () => {
     expect(luhnService.validate("49927398717")).toBe(false);
-    expect(luhnService.validate("1234567812345670")).toBe(false);
+    expect(luhnService.validate("1234567812345678")).toBe(false);
   });
 
   test("should handle numbers with spaces or dashes", () => {

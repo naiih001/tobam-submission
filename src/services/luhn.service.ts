@@ -1,19 +1,34 @@
 export class LuhnService {
-  validate(cardNumber: string): boolean {
-    const digits = cardNumber.split('').reverse();
-    let sum = 0;
-    let parity = digits[0];
-
-    for (let i = 0; i < digits.length; i++) {
-      const digit = digits[i];
-      if (i % 2 === 0) {
-        sum += parseInt(digit, 10);
-      } else {
-        sum += parseInt(digit, 10) * 2;
-      }
+  /**
+   * Validates a credit card number using the Luhn algorithm.
+   * @param cardNumber The card number as a string.
+   * @returns boolean true if valid, false otherwise.
+   */
+  public validate(cardNumber: string): boolean {
+    const sanitized = cardNumber.replace(/\D/g, '');
+    
+    if (sanitized.length === 0) {
+      return false;
     }
 
-    parity = 10 - sum % 10;
-    return parity === parseInt(parity, 10);
+    let sum = 0;
+    let shouldDouble = false;
+
+    // Iterate from right to left
+    for (let i = sanitized.length - 1; i >= 0; i--) {
+      let digit = parseInt(sanitized.charAt(i), 10);
+
+      if (shouldDouble) {
+        digit *= 2;
+        if (digit > 9) {
+          digit -= 9;
+        }
+      }
+
+      sum += digit;
+      shouldDouble = !shouldDouble;
+    }
+
+    return sum % 10 === 0;
   }
 }
